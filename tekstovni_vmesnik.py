@@ -4,7 +4,8 @@ def izpis_igre(igra):
     return (
         'Pravilni del gesla: {}\n'.format(igra.pravilni_del_gesla()) +
         'Neuspeli poskusi: {}\n'.format(igra.nepravilni_del_gesla()) +
-        'Število preostalih poskusov: {}\n'.format(model.STEVILO_DOVOLJENIH_NAPAK - igra.stevilo_napak())
+        'Število preostalih poskusov: {}\n'.format(model.STEVILO_DOVOLJENIH_NAPAK - igra.stevilo_napak()) +
+        'V slikici:\n{}\n'.format(igra.slika())
     )
     
 def izpis_zmage(igra):
@@ -15,15 +16,21 @@ def izpis_zmage(igra):
 
 def izpis_poraza(igra):
     return (
-        'Porabili ste vse poskuse.\n' +
+        'Porabili ste vse poskuse.\n{}\n'.format(igra.slika()) +
         'Pravilno geslo je bilo {}\n'.format(igra.geslo)
     )
 
 def zahtevaj_vnos():
-    return input('Vnesite črko: ')
+    crka = input('Vnesite črko: ')
+    if len(crka) != 1 or crka.isalpha() == False:
+        print('Neveljaven vnos. Poskusite še enkrat.')
+        return zahtevaj_vnos()
+    else:
+        return crka
 
-def pozeni_vmesnik():
+def pozeni_vmesnik():    # Ko je igra zaključena, naj vmesnik igralcu ponudi ponoven zagon igre.
     igra = model.nova_igra()
+    print('Pozdravljeni, pred vami so vislice, ki jih seveda že poznate.\nKar začnimo.\n\n')
     while True:
         print(izpis_igre(igra))
         poskus = zahtevaj_vnos()
@@ -34,5 +41,14 @@ def pozeni_vmesnik():
         elif stanje == model.PORAZ:
             print(izpis_poraza(igra))
             break
+    ponovitev = input("Ali želite ponovno poskusiti? Vpišite 'DA' oz. 'NE': ")
+    while True:
+        if ponovitev in 'DAdaDadA':
+            pozeni_vmesnik()
+        elif ponovitev in 'NEneNenE':
+            print('Nasvidenje!')
+            break
+        else:
+            ponovitev = input("Neveljaven vnos. Vnesite 'DA' ali 'NE': ")
 
 pozeni_vmesnik()

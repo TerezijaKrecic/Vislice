@@ -24,6 +24,21 @@ class Igra:
     def stevilo_napak(self): # izracuna št. napačnih ugibov je igralec že naredil
         return len(self.napacne_crke())
 
+    def slika(self):
+        n0 = ''
+        n1 = '_ ______'
+        n2 = ' |     \n_|______'
+        n3 = ' |      \n |      \n' + n2
+        n4 = ' |      \n |      \n' + n3
+        n5 = '_________\n' + n4
+        n6 = '_________\n |     |\n |      \n' + n3
+        n7 = '_________\n |     |\n |     O\n' + n3
+        n8 = '_________\n |     |\n |     O\n |     |\n |      \n' + n2
+        n9 = '_________\n |     |\n |     O\n |    /|\ \n |      \n' + n2
+        n10 = '_________\n |     |\n |     O\n |    /|\ \n |    / \ \n' + n2
+        seznam_napak = [n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10]
+        return seznam_napak[self.stevilo_napak()]
+
     def zmaga(self): # ali trenutno stanje določa zmago
         return set(self.pravilne_crke()) == set(self.geslo)
         # return all(crka in self.crke for crka in self.geslo)
