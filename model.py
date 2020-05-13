@@ -29,7 +29,7 @@ class Igra:
         # return all(crka in self.crke for crka in self.geslo)
     
     def poraz(self): # ali trenutno stanje določa poraz
-        return self.stevilo_napak() > STEVILO_DOVOLJENIH_NAPAK
+        return self.stevilo_napak() >= STEVILO_DOVOLJENIH_NAPAK
     
     def pravilni_del_gesla(self): # vrne niz z že uganjenim delom gesla s podčrtaji
         uganjen_del = ''
@@ -60,4 +60,4 @@ with open('besede.txt', encoding='utf-8') as besede:
 
 def nova_igra():
     beseda = random.choice(bazen_besed)
-    Igra(beseda)
+    return Igra(beseda)
