@@ -22,7 +22,10 @@ def izpis_poraza(igra):
 
 def zahtevaj_vnos():
     crka = input('Vnesite črko: ')
-    if len(crka) != 1 or crka.isalpha() == False:
+    if crka in igra.crke:
+        print('To črko ste že uporabili. Poskusite še enkrat.')
+        return zahtevaj_vnos()
+    elif len(crka) != 1 or crka.isalpha() == False:
         print('Neveljaven vnos. Poskusite še enkrat.')
         return zahtevaj_vnos()
     else:
