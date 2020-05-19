@@ -32,6 +32,7 @@ def pozeni_vmesnik():    # Ko je igra zaključena, naj vmesnik igralcu ponudi po
     igra = model.nova_igra()
     print('Pozdravljeni, pred vami so vislice, ki jih seveda že poznate.\nKar začnimo.\n')
     while True:
+        print('========================================')
         print(izpis_igre(igra))
         poskus = zahtevaj_vnos()
         stanje = igra.ugibaj(poskus) # dobimo eno od petih konstant
@@ -42,10 +43,10 @@ def pozeni_vmesnik():    # Ko je igra zaključena, naj vmesnik igralcu ponudi po
             print(izpis_poraza(igra))
             break
         elif stanje == model.PONOVLJENA_CRKA:
-            print('To črko ste že uporabili. Poskusite še enkrat.')
+            print('To črko ste že uporabili. Poskusite še enkrat.\n========================================')
 
     ponovitev = input("Ali želite ponovno poskusiti? Vpišite 'DA' oz. 'NE': ")
-    while ponovitev.upper not in ['DA', 'NE']:
+    while ponovitev.upper() not in ['DA', 'NE']:
         ponovitev = input("Neveljaven vnos. Vnesite 'DA' ali 'NE': ")
     if ponovitev.upper() == 'DA':
         pozeni_vmesnik()
