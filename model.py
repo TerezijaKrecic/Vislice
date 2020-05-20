@@ -6,6 +6,7 @@ PRAVILNA_CRKA = '+'    # vrednosti teh konstant niso prav nič pomembne, le da s
 PONOVLJENA_CRKA = 'o'
 NAPACNA_CRKA = '-'
 
+ZACETEK = 'S'
 ZMAGA = 'W'
 PORAZ = 'X'
 
@@ -24,20 +25,20 @@ class Igra:
     def stevilo_napak(self): # izracuna št. napačnih ugibov je igralec že naredil
         return len(self.napacne_crke())
 
-    def slika(self):
-        n0 = ''
-        n1 = '_ ______'
-        n2 = ' |     \n_|______'
-        n3 = ' |      \n |      \n' + n2
-        n4 = ' |      \n |      \n' + n3
-        n5 = '_________\n' + n4
-        n6 = '_________\n |     |\n |      \n' + n3
-        n7 = '_________\n |     |\n |     O\n' + n3
-        n8 = '_________\n |     |\n |     O\n |     |\n |      \n' + n2
-        n9 = '_________\n |     |\n |     O\n |    /|\ \n |      \n' + n2
-        n10 = '_________\n |     |\n |     O\n |    /|\ \n |    / \ \n' + n2
-        seznam_napak = [n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10]
-        return seznam_napak[self.stevilo_napak()]
+    # def slika(self):
+    #     n0 = ''
+    #     n1 = '_ ______'
+    #     n2 = ' |     \n_|______'
+    #     n3 = ' |      \n |      \n' + n2
+    #     n4 = ' |      \n |      \n' + n3
+    #     n5 = '_________\n' + n4
+    #     n6 = '_________\n |     |\n |      \n' + n3
+    #     n7 = '_________\n |     |\n |     O\n' + n3
+    #     n8 = '_________\n |     |\n |     O\n |     |\n |      \n' + n2
+    #     n9 = '_________\n |     |\n |     O\n |    /|\ \n |      \n' + n2
+    #     n10 = '_________\n |     |\n |     O\n |    /|\ \n |    / \ \n' + n2
+    #     seznam_napak = [n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10]
+    #     return seznam_napak[self.stevilo_napak()]
 
     def zmaga(self): # ali trenutno stanje določa zmago
         return set(self.pravilne_crke()) == set(self.geslo)
@@ -49,7 +50,7 @@ class Igra:
     def pravilni_del_gesla(self): # vrne niz z že uganjenim delom gesla s podčrtaji
         uganjen_del = ''
         for crka in self.geslo:
-            uganjen_del += crka if crka in self.crke else '_'
+            uganjen_del += crka + ' ' if crka in self.crke else '_ '
         return uganjen_del
 
     def nepravilni_del_gesla(self): # vrne niz s presledkom ločene nepravilne ugibe igralca
@@ -76,3 +77,25 @@ with open('besede.txt', encoding='utf-8') as besede:
 def nova_igra():
     beseda = random.choice(bazen_besed)
     return Igra(beseda)
+
+
+class Vislice:
+    def __init__(self):
+        self.igre = {}
+
+    def prost_id_igre(self):
+        if len(self.igre) == 0:
+            return 0
+        else:
+            return max(self.igre.keys()) + 1
+
+    def nova_igra(self):
+        id_igre = self.prost_id_igre()
+        igra = nova_igra()
+        self.igre[id_igre] = (igra, ZACETEK)
+        return id_igre
+
+    def ugibaj(self, id_igre, crka):
+        igra, _ = self.igre[id_igre]
+        stanje = igra.ugibaj(crka)
+        self.igre[id_igre] = (igra, stanje)
