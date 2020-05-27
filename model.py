@@ -1,4 +1,5 @@
 import random
+import json
 
 STEVILO_DOVOLJENIH_NAPAK = 10
 
@@ -9,6 +10,9 @@ NAPACNA_CRKA = '-'
 ZACETEK = 'S'
 ZMAGA = 'W'
 PORAZ = 'X'
+
+DATOTEKA_STANJE = 'stanje.json' #ime datoteke, na katero bomo shr. stanje igre
+DATOTEKA_BESEDE = 'besede.txt'
 
 class Igra:
     def __init__(self, geslo, crke=None): # NE crke=[] (ce imamo vec Iger ...)
@@ -71,7 +75,7 @@ class Igra:
             return NAPACNA_CRKA
 
 
-with open('besede.txt', encoding='utf-8') as besede:
+with open(DATOTEKA_BESEDE, encoding='utf-8') as besede:
     bazen_besed = [beseda.strip().upper() for beseda in besede]
 
 def nova_igra():
@@ -80,8 +84,10 @@ def nova_igra():
 
 
 class Vislice:
-    def __init__(self):
-        self.igre = {}
+    def __init__(self, datoteka_s_stanjem):
+        # self.igre = {} to smo rabiil, dokler nismo zaceli uporablat json...
+        self.datoteka_s_stanjem = datoteka_s_stanjem
+        self.nalozi_igre_iz_datoteke()
 
     def prost_id_igre(self):
         if len(self.igre) == 0:
@@ -93,9 +99,34 @@ class Vislice:
         id_igre = self.prost_id_igre()
         igra = nova_igra()
         self.igre[id_igre] = (igra, ZACETEK)
+        self.zapisi_igre_v_datoteko()
         return id_igre
 
     def ugibaj(self, id_igre, crka):
         igra, _ = self.igre[id_igre]
         stanje = igra.ugibaj(crka)
         self.igre[id_igre] = (igra, stanje)
+        self.zapisi_igre_v_datoteko()
+
+
+    def nalozi_igre_iz_datoteke(self):
+        with open(self.datoteka_s_stanjem, 'r', encoding='utf-8') as f:
+            igre = json.load(f)
+            self.igre = {int(id_igre): (Igra(geslo, crke), stanje) for id_igre, (geslo, crke, stanje) in igre.items()}
+
+    def zapisi_igre_v_datoteko(self):
+        with open(self.datoteka_s_stanjem, 'w', encoding='utf-8') as f:
+            igre = {id_igre: (igra.geslo, igra.crke, stanje) for id_igre, (igra, stanje) in self.igre.items()}
+            json.dump(igre, f, ensure_ascii=False) # v json se šumniki ne zakodirajo
+
+
+# self.igre = {
+#     0: (Igra(geslo, crke), stanje),
+#     1: ...
+#     ...
+# }
+# igre = {
+#     0: (geslo, crke, stanje),
+#     1: ...
+#     ...
+# }
